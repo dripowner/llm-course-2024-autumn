@@ -96,7 +96,7 @@ class Trainer:
         Возвращает:
             Tensor: Значение потерь.
         """
-        return self.loss_func(torch.permute(logits, (0, 2, 1)), y)
+        return self.loss_func(logits.reshape(-1, logits.size(-1)), y.reshape(-1))
 
     def train(self) -> None:
         """
