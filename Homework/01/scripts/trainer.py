@@ -110,8 +110,8 @@ class Trainer:
                 iterations += 1
                 self.model.train()
                 # Готовим входы (текущие токены) и выходы (следующие токены)
-                x = torch.stack([ids.T[i].T for i in range(0, len(ids[0]) - 1)])
-                y = torch.stack([ids.T[i] for i in range(1, len(ids[0]))])
+                x = ids[:, :-1]
+                y = ids[:, 1:]
                 # Получаем логиты и считаем лосс
                 logits, _ = self.model(x)
                 loss = self.calc_loss(logits, y)
@@ -133,8 +133,8 @@ class Trainer:
         total_loss = 0.0
         for ids in self.eval_loader:
             # Готовим входы (текущие номера токенов) и выходы (следующие номера токенов)
-            x = torch.stack([ids.T[i].T for i in range(0, len(ids[0]) - 1)])
-            y = torch.stack([ids.T[i] for i in range(1, len(ids[0]))])
+            x = ids[:, :-1]
+            y = ids[:, 1:]
             with (torch.no_grad()):
                 # Получаем логиты и считаем лосс
                 logits, _ = self.model(x)

@@ -321,6 +321,16 @@ class BpeTokenizer(ByteTokenizer):
         ids = list(text.encode('utf-8'))
 
         # Последовательно применяем таблицу склеиваний в том порядке, в котором добавлялись токены в словарь
-        for pair, idx in self.merges.items():
-            ids = merge(ids, pair, idx)
+        while len(ids) > 1:
+            cnt = count_pairs([ids])
+            sorted_cnt = sorted(cnt.items(), key=lambda x: x[1], reverse=True)
+            choosen_pair = None
+            for p, f in sorted_cnt:
+                if p in self.merges.keys():
+                    choosen_pair = p
+                    break
+            if choosen_pair is None:
+                break
+            idx = self.merges[choosen_pair]
+            ids = merge(ids, choosen_pair, idx)
         return ids
