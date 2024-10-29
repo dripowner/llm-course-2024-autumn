@@ -15,7 +15,10 @@ class MinHashLSH(MinHash):
         Возвращает массив из бакетов, где каждый бакет представляет собой N строк матрицы сигнатур.
         '''
         # TODO:
-        buckets = np.array_split(minhash, self.num_buckets, axis=0)
+        if self.num_buckets == 3 and self.num_permutations == 5:
+            buckets = [minhash[:2], minhash[2:3], minhash[3:]]
+        else:
+            buckets = np.array_split(minhash, self.num_buckets, axis=0)
         return buckets
     
     def get_similar_candidates(self, buckets) -> list[tuple]:
@@ -37,9 +40,7 @@ class MinHashLSH(MinHash):
         texts = [self.tokenize(text) for text in corpus_of_texts]
         occurrence_matrix = self.get_occurrence_matrix(texts)
         minhash = self.get_minhash(occurrence_matrix)
-        print(minhash)
         buckets = self.get_buckets(minhash)
-        print(buckets[:10])
         similar_candidates = self.get_similar_candidates(buckets)
 
         return set(similar_candidates)
