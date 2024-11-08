@@ -62,7 +62,8 @@ class MinHash:
             у нас 3 совпадения (1,1,3), ответ будет 3/5 = 0.6
         '''
         # TODO:
-        return len(set.intersection(set_a, set_b)) / len(set.union(set_a, set_b))
+        matches = np.sum(array_a == array_b)
+        return matches / len(array_a)
     
     def get_similar_pairs(self, min_hash_matrix) -> list[tuple]:
         '''
@@ -77,11 +78,11 @@ class MinHash:
         Находит похожих кандидатов. Отдает матрицу расстояний
         '''
         # TODO: 
-        minshash_sets = [set(col) for col in min_hash_matrix.T]
+        minshash_sets = [col for col in min_hash_matrix.T]
         sim_mtx = [[0] * min_hash_matrix.shape[1] for _ in range(min_hash_matrix.shape[1])]
         for set_a_id in range(len(minshash_sets)):
             for set_b_id in range(set_a_id, len(minshash_sets), 1):
-                sim_mtx[set_a_id][set_b_id] = self.get_jaccard_similarity(minshash_sets[set_a_id], minshash_sets[set_b_id])
+                sim_mtx[set_a_id][set_b_id] = self.get_minhash_similarity(minshash_sets[set_a_id], minshash_sets[set_b_id])
                 sim_mtx[set_b_id][set_a_id] = sim_mtx[set_a_id][set_b_id]
                 
         return sim_mtx
