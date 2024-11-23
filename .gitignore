@@ -2,3 +2,4 @@ __pycache__
 venv
 *.pt
 seminar.ipynb
+reward_model/
